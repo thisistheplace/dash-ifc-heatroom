@@ -1,9 +1,8 @@
 import dash_ifc_heatroom
-import dash
+from dash import Dash, html
 from dash.dependencies import Input, Output
-import dash_html_components as html
 
-app = dash.Dash(__name__)
+app = Dash(__name__)
 
 app.layout = html.Div([
     dash_ifc_heatroom.DashIfcHeatroom(
