@@ -1,0 +1,13 @@
+Package: dashIfcHeatroom
+Title: Residential heating system design tool using IFC.js
+Version: 0.0.1
+Description: Residential heating system design tool using IFC.js
+Depends: R (>= 3.0.2)
+Imports: 
+Suggests: 
+License: GPL-3.0 + file LICENSE
+URL: https://github.com/thisistheplace/dash-ifc-heatroom
+BugReports: https://github.com/thisistheplace/dash-ifc-heatroom/issues
+Encoding: UTF-8
+LazyData: true
+KeepSource: true
