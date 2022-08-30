@@ -8,15 +8,23 @@
         "type": {
           "name": "string"
         },
-        "required": true,
-        "description": "The ID used to identify the container for the IFC viewer component."
+        "required": false,
+        "description": "The ID used to identify the container for the IFC viewer component.",
+        "defaultValue": {
+          "value": "'test'",
+          "computed": false
+        }
       },
       "ifcData": {
         "type": {
           "name": "string"
         },
         "required": false,
-        "description": "The contents of the ifc file"
+        "description": "The contents of the ifc file",
+        "defaultValue": {
+          "value": "null",
+          "computed": false
+        }
       }
     }
   }

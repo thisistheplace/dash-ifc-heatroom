@@ -9,7 +9,7 @@ class DashIfcHeatroom(Component):
 
 Keyword arguments:
 
-- id (string; required):
+- id (string; default 'test'):
     The ID used to identify the container for the IFC viewer
     component.
 
@@ -20,7 +20,7 @@ Keyword arguments:
     _namespace = 'dash_ifc_heatroom'
     _type = 'DashIfcHeatroom'
     @_explicitize_args
-    def __init__(self, id=Component.REQUIRED, ifcData=Component.UNDEFINED, **kwargs):
+    def __init__(self, id=Component.UNDEFINED, ifcData=Component.UNDEFINED, **kwargs):
         self._prop_names = ['id', 'ifcData']
         self._valid_wildcard_attributes =            []
         self.available_properties = ['id', 'ifcData']
@@ -29,7 +29,7 @@ Keyword arguments:
         _locals = locals()
         _locals.update(kwargs)  # For wildcard attrs and excess named props
         args = {k: _locals[k] for k in _explicit_args if k != 'children'}
-        for k in ['id']:
+        for k in []:
             if k not in args:
                 raise TypeError(
                     'Required argument `' + k + '` was not specified.')
