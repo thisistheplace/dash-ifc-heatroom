@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef, useCallback } from 'react'
 
+// https://simbathesailor007.medium.com/double-click-using-react-hooks-4fea2292d3a4
 export function useDoubleClick (callback) {
   const [elem, setElem] = useState(null)
   const callbackRef = useCallback(node => {
