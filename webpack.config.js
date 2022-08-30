@@ -3,6 +3,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 const webpack = require('webpack');
 const WebpackDashDynamicImport = require('@plotly/webpack-dash-dynamic-import');
 const packagejson = require('./package.json');
+const CopyPlugin = require("copy-webpack-plugin");
 
 const dashLibraryName = packagejson.name.replace(/-/g, '_');
 
@@ -117,7 +118,12 @@ module.exports = (env, argv) => {
             new webpack.SourceMapDevToolPlugin({
                 filename: '[file].map',
                 exclude: ['async-plotlyjs']
-            })
+            }),
+            new CopyPlugin({
+                patterns: [
+                    { from: "./node_modules/web-ifc/web-ifc.wasm", to: "assets/web-ifc.wasm" },
+                ],
+            }),
         ]
     }
 };

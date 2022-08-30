@@ -6,18 +6,13 @@ export dashifcheatroom
     dashifcheatroom(;kwargs...)
 
 A DashIfcHeatroom component.
-ExampleComponent is an example component.
-It takes a property, `label`, and
-displays it.
-It renders an input with the property `value`
-which is editable by the user.
+
 Keyword arguments:
-- `id` (String; optional): The ID used to identify this component in Dash callbacks.
-- `label` (String; required): A label that will be printed when this component is rendered.
-- `value` (String; optional): The value displayed in the input.
+- `id` (String; required): The ID used to identify the container for the IFC viewer component.
+- `ifcData` (String; optional): The contents of the ifc file
 """
 function dashifcheatroom(; kwargs...)
-        available_props = Symbol[:id, :label, :value]
+        available_props = Symbol[:id, :ifcData]
         wild_props = Symbol[]
         return Component("dashifcheatroom", "DashIfcHeatroom", "dash_ifc_heatroom", available_props, wild_props; kwargs...)
 end

@@ -1,61 +1,88 @@
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react'
+import PropTypes from 'prop-types'
+import { IfcViewerAPI } from 'web-ifc-viewer'
+import { applyFullScreen } from '../ui/fullscreen'
 
-/**
- * ExampleComponent is an example component.
- * It takes a property, `label`, and
- * displays it.
- * It renders an input with the property `value`
- * which is editable by the user.
- */
-export default class DashIfcHeatroom extends Component {
-    render() {
-        const {id, label, setProps, value} = this.props;
+const DashIfcHeatroom = (props) => {
+  const {
+    id,
+    ifcData
+  } = props
 
-        return (
-            <div id={id}>
-                ExampleComponent: {label}&nbsp;
-                <input
-                    value={value}
-                    onChange={
-                        /*
-                         * Send the new value to the parent component.
-                         * setProps is a prop that is automatically supplied
-                         * by dash's front-end ("dash-renderer").
-                         * In a Dash app, this will update the component's
-                         * props and send the data back to the Python Dash
-                         * app server if a callback uses the modified prop as
-                         * Input or State.
-                         */
-                        e => setProps({ value: e.target.value })
-                    }
-                />
-            </div>
-        );
+  const [viewer, setViewer] = useState(null)
+
+  useEffect(() => {
+    console.log(viewer)
+    if (viewer != null) {
+      viewer.dispose()
     }
+    if (id != null) {
+      setViewer(
+        (props) => {
+          console.log(props)
+          const viewer = createViewer(props)
+          if (ifcData != null) {
+            ifcLoader(props, viewer)
+          }
+          return viewer
+        }
+      )
+    }
+  }, [ifcData])
+
+  function createViewer (props) {
+    const container = document.getElementById(id)
+    const viewer = new IfcViewerAPI({
+      container: container
+    })
+    viewer.axes.setAxes()
+    viewer.IFC.setWasmPath('../../')
+    viewer.IFC.loader.ifcManager.applyWebIfcConfig({
+      USE_FAST_BOOLS: true,
+      COORDINATE_TO_ORIGIN: true
+    })
+
+    // Don't show edges
+    viewer.context.renderer.postProduction.active = false
+
+    // Selectors
+    window.onmousemove = () => viewer.IFC.selector.prePickIfcItem()
+    window.onclick = () => viewer.IFC.selector.pickIfcItem(true)
+    window.ondblclick = viewer.IFC.selector.highlightIfcItem(true)
+    // Clear selection
+    window.onkeydown = (event) => {
+      if (event.code === 'KeyC') {
+        viewer.IFC.selector.unpickIfcItems()
+        viewer.IFC.selector.unHighlightIfcItems()
+      }
+    }
+    return viewer
+  }
+
+  async function ifcLoader (props, viewer) {
+    const blob = new Blob([ifcData], { type: 'text/plain', endings: 'native' })
+    const ifcFile = new File([blob], 'file.ifc')
+    await viewer.IFC.loadIfc(ifcFile, true)
+  }
+
+  return (
+    <div id={id} className={'fullsize'}/>
+  )
 }
 
-DashIfcHeatroom.defaultProps = {};
+DashIfcHeatroom.defaultProps = {
+}
 
 DashIfcHeatroom.propTypes = {
-    /**
-     * The ID used to identify this component in Dash callbacks.
-     */
-    id: PropTypes.string,
+  /**
+   * The ID used to identify the container for the IFC viewer component.
+   */
+  id: PropTypes.string.isRequired,
 
-    /**
-     * A label that will be printed when this component is rendered.
-     */
-    label: PropTypes.string.isRequired,
+  /**
+   * The contents of the ifc file
+   */
+  ifcData: PropTypes.string
+}
 
-    /**
-     * The value displayed in the input.
-     */
-    value: PropTypes.string,
-
-    /**
-     * Dash-assigned callback that should be called to report property changes
-     * to Dash, to make them available for callbacks.
-     */
-    setProps: PropTypes.func
-};
+export default applyFullScreen(DashIfcHeatroom)
